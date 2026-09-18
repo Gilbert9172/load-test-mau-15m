@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: load-test-mau-15m
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/loadtest?rewriteBatchedStatements=true
+    username: ${DB_USER:loadtest}
+    password: ${DB_PASSWORD:loadtest}
+    hikari:
+      # 가설 3(커넥션 풀 고갈)에서 10으로 낮춰 실험한다.
+      maximum-pool-size: ${DB_POOL_SIZE:20}
+      connection-timeout: 3000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.batch_size: 100
+        order_inserts: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: ${SERVER_SHUTDOWN:immediate}   # 가설 9에서 graceful 로 바꿔 비교
+  tomcat:
+    threads:
+      max: ${TOMCAT_MAX_THREADS:200}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics
+  metrics:
+    tags:
+      instance: ${INSTANCE_NAME:local}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+loadtest:
+  chart:
+    ttl-seconds: ${CHART_TTL_SECONDS:60}
