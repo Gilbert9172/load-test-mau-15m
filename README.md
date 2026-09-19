@@ -16,7 +16,7 @@ MAU 1500만 서비스가 받는 부하를 로컬에서 재현하고, 병목을 �
 | 머신 | 역할 |
 |---|---|
 | MacBook Pro M1 Pro 16GB | 앱 3대 + MySQL + Redis + 관측 (`docker compose up`) |
-| MacBook Air M1 8GB | 부하 생성기. `k6 run -e BASE_URL=http://<M1 Pro IP>:8080 ...` |
+| MacBook Air M1 16GB | 부하 생성기. `k6 run -e BASE_URL=http://<M1 Pro IP>:8080 ...` |
 
 M1 Pro 단일 머신의 예상 상한은 5,000~8,000 RPS. 16,000 RPS 도달과 수평 확장(가설 10)은 클라우드 단계에서 한다.
 
