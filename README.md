@@ -11,6 +11,15 @@ MAU 1500만 서비스가 받는 부하를 로컬에서 재현하고, 병목을 �
 | 피크 DB QPS | 약 9,600 (캐시 히트율 80% 가정) |
 | 피크 Redis QPS | 약 38,000 |
 
+## 하드웨어
+
+| 머신 | 역할 |
+|---|---|
+| MacBook Pro M1 Pro 16GB | 앱 3대 + MySQL + Redis + 관측 (`docker compose up`) |
+| MacBook Air M1 8GB | 부하 생성기. `k6 run -e BASE_URL=http://<M1 Pro IP>:8080 ...` |
+
+M1 Pro 단일 머신의 예상 상한은 5,000~8,000 RPS. 16,000 RPS 도달과 수평 확장(가설 10)은 클라우드 단계에서 한다.
+
 ## 구성
 
 - `src/` Java 21, Spring Boot 3.4. API 5개: 곡 목록, 곡 상세, 인기 차트, 재생 기록, 좋아요
@@ -58,3 +67,4 @@ make k6-mixed RPS=2000 DURATION=3m
 | 7 | GC와 p99 | `mixed.js` + `JAVA_OPTS` |
 | 8 | 인스턴스 장애 | `mixed.js` + `docker compose kill app2` |
 | 9 | 무중단 배포 | `mixed.js` + `SERVER_SHUTDOWN` 비교 |
+| 10 | 수평 확장 (클라우드) | 앱 2→4→8대, `mixed.js` |
